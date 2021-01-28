@@ -13,13 +13,13 @@ var T = new Twit({
     strictSSL:            true,     // optional - requires SSL certificates to be valid.
   });
 
-
-// Writing the tweet to the file
+// Writing the tweet id to the params file
 function writeParams(newParam) {
   console.log("we are writing our params file ..." + newParam.since_id);
   return fs.writeFileSync(paramsPath, JSON.stringify(newParam));
 }
 
+// Reading the tweet id from the params file
 function readParams() {
   console.log("we are reading the params file...");
   const paramsRead = fs.readFileSync(paramsPath);
@@ -31,7 +31,7 @@ function getTweets(since_id){
   return new Promise((resolve, reject) => {
     let params = {
       q: 'new to anitwit',
-      count: 3,
+      count: 10,
     };
 
     if (since_id){
@@ -66,12 +66,12 @@ function postRetweet(id){
 
 async function main(){
   try {
-    const params = readParams(); //calling function reading the parameter from the other file
-    const data = await getTweets(params.since_id); // the data from getTweets() is all the information about ALL the singular tweet
+    const params = readParams(); 
+    const data = await getTweets(params.since_id); // The data from getTweets() is ALL the information about ALL the singular tweets
     const theTweets = data.statuses;
-    console.log("we got the tweets " + theTweets.length); // prints out the number of tweets found
+    console.log("we got the tweets " + theTweets.length); // Prints out the number of tweets found
 
-    // looping through each singular tweet within the many tweets we've found
+    // Looping through each singular tweet within the many tweets we've found
     for (var i = theTweets.length - 1 ; i >= 0 ; i--)
     {
       try
@@ -80,13 +80,13 @@ async function main(){
         var lowerText = text.toLowerCase();
         if (lowerText.includes("new") && lowerText.includes("anitwit") && (lowerText.includes("im ") || lowerText.includes("i’m") || lowerText.includes("i am")) ) // Checks to make sure the tweet is about anitwit and is new
         { 
-          await postRetweet(theTweets[i].id_str);  // passing in that specific tweet Id
+          await postRetweet(theTweets[i].id_str);  // Passing in that specific tweet Id
           console.log("successful retweet " + theTweets[i].id_str);
         } else {
           console.log("This tweet didnt have everything we're looking for!");
         }
       } 
-        catch(e) // if one tweet has an error the whole program wont stop running
+        catch(e) // If one tweet has an error the whole program wont stop running
         { 
           console.log("unsuccessful retweet" + e); 
         }
