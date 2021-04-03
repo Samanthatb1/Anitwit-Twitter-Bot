@@ -103,4 +103,4 @@ console.log("the bot is starting") ;
 main();
 
 //Interval for posting
-setInterval(main, 1000*60*60*24);
+setInterval(main, 1000*60*60*24*2);
